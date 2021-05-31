@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Prepend comment symbol (#, // etc.) to figlet text
+figlet $1 | sed "s|^|$2|" | pbcopy

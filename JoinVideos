@@ -1,0 +1,24 @@
+#!/bin/sh
+
+###############################################
+# Take two videos and stack them horizontally #
+###############################################
+
+# Get the height of the second video, so that the first is rescaled to the same height
+height=$(ffprobe -v error -show_entries stream=height -of compact $2 | sed -E 's/[^0-9]//g')
+
+# Get the extension of the first video
+extension=$(echo $1 | sed 's/.*\.//g')
+
+# Rescale the first video so that it is the same height as the second, and store it as e.g. tmp.mp4
+# The -2 ensures that the width is an even number (so far, all of my first-argument videos have had an even width so I'll fix the other case later if I have to)
+ffmpeg -y -i $1 -vf scale=-2:$height tmp.$extension
+
+# Put them together side-by-side and output as Joined.mp4
+ffmpeg -y -i tmp.$extension -i $2 -filter_complex hstack $3
+
+# Remove the temporary rescaled first video
+rm tmp.$extension
+
+
+# If there is an error, it is probably becuse the first video had an odd width (when the second video has an odd width, it is fixed by the -2, see above comment)

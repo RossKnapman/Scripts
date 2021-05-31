@@ -1,0 +1,35 @@
+#!/bin/bash
+
+###################################
+# Create block comments like this #
+###################################
+
+# First argument is the comment itself (I refer to it as "header" in this script), second is the charracter
+# Note: Need to escape if the replaceCharacter is '#' (e.g. like HeaderComment "This Is My Header" \#
+
+theHeader=$1
+replaceCharacter=$2
+
+replaceCharacterLength=${#replaceCharacter}
+
+# Get the first character (for if the comment is e.g. //)
+replaceCharacter=${replaceCharacter:0:1}
+
+headerLength=${#theHeader}
+
+# The line to go above and below the comment
+# Length is the length of the comment, plus the comment characters (//, # etc.) on either side, plus two spaces
+for i in $(seq $((headerLength + 2*replaceCharacterLength + 2))); do
+    aboveBelowLine=$aboveBelowLine$replaceCharacter
+done
+
+
+for i in $(seq $replaceCharacterLength); do
+    commentLine=$commentLine$replaceCharacter
+done
+commentLine="$commentLine $theHeader "
+for i in $(seq $replaceCharacterLength); do
+    commentLine=$commentLine$replaceCharacter
+done
+
+printf "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | pbcopy

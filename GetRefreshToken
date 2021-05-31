@@ -1,0 +1,16 @@
+#!/bin/sh
+
+clientId=<your client ID>
+clientSecret=<your client secret>
+
+port=8886
+redirectUri="https%3A%2F%2Flocalhost%3A$port%2F"
+
+authoriseUrl="https://accounts.spotify.com/authorize?client_id=$clientId&response_type=code&redirect_uri=$redirectUri&scope=user-read-currently-playing"
+
+open $authoriseUrl
+# Then copy everything after "code=", and run the command below:
+
+#curl -H "Authorization: Basic ZjM...zE=" -d grant_type=authorization_code -d code=MQCbtKe...44KN -d redirect_uri=https%3A%2F%2Fwww.foo.com%2Fauth https://accounts.spotify.com/api/token
+
+# Where, after "basic" and before "=", there is clientId:clientSecret, after having encoded to base64 (https://www.base64encode.org/), and the code is after "code="

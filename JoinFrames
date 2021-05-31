@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# I always forget the ffmpeg command to join frames with names m000000.png, m000001.png, ... together, hence this script :)
+
+ffmpeg -y -framerate 25 -i $1/m%06d.png -r 25 -pix_fmt yuv420p mag.mp4

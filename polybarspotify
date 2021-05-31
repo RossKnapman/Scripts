@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Refershes Polybar with the currently-playing song, stored in /tmp/songdata.txt (written by SpotifyAccess)
+
+if [ -f /tmp/songdata.txt ]; then
+    cat /tmp/songdata.txt
+else
+    echo "No Song Playing"
+fi

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Template email to remind group members that they will present
+
+echo "Hi $1,
+
+This is just a reminder that you are presenting $2 in the meeting on $3.
+
+Thanks,
+Ross" | pbcopy 

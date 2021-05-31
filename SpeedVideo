@@ -1,0 +1,11 @@
+#!/bin/sh
+
+###################################
+# Take in a video and speed it up #
+###################################
+
+# I don't know why this doesn't always work
+
+ffmpeg -y -i $1 -map 0:v -c:v copy -bsf:v h264_mp4toannexb raw.h264
+ffmpeg -y -fflags +genpts -r $2 -i raw.h264 -c:v copy $3
+rm raw.h264

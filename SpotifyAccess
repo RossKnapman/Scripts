@@ -1,0 +1,40 @@
+#!/bin/sh
+
+refreshToken="Your refresh token"
+
+# After having converted to base64
+clientIdSecret="Your ID secret"
+
+
+getNewToken() {
+    output=$(curl -sH "Authorization: Basic $clientIdSecret" -d grant_type=refresh_token -d refresh_token=$refreshToken https://accounts.spotify.com/api/token) 
+    accessToken=$(echo $output | jq -r ".access_token")
+    echo $accessToken > /tmp/SpotifyToken.txt
+}
+
+
+# If access token not already stored in file, get it
+if [ ! -f /tmp/SpotifyToken.txt ]; then
+    getNewToken
+else
+    accessToken=$(cat /tmp/SpotifyToken.txt)
+fi
+
+outData=$(curl -sX GET "https://api.spotify.com/v1/me/player/currently-playing" -H "Authorization: Bearer $accessToken")
+
+# Check if access token has expired
+if [ "$(echo $outData | jq -r '.error == null')" == "false" ]; then
+    getNewToken
+    outData=$(curl -sX GET "https://api.spotify.com/v1/me/player/currently-playing" -H "Authorization: Bearer $accessToken")
+fi
+
+playStatus=$(echo $outData | jq -r '.is_playing')
+
+track=$(echo $outData | jq -r '.item .name')
+artist=$(echo $outData | jq -r '.item .artists [] .name')
+
+if [ -z "$track" ]; then
+    echo "Nothing Playing"
+else
+     echo $track "|" $artist $([[ $playStatus = 'false' ]] && echo "(Paused)")
+fi

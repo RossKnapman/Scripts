@@ -1,0 +1,12 @@
+#!/bin/sh
+
+###########################################################################
+# Email template to remind group members that it is their turn to present #
+###########################################################################
+
+echo "Hi $1,
+
+This is just a reminder that you are presenting your project in the group meeting on $2.
+
+Thanks,
+Ross" | pbcopy
