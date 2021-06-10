@@ -1,0 +1,48 @@
+#!/bin/sh
+
+
+######################
+# Non-Research Stuff #
+######################
+
+# Presentations
+rsync -avz /Users/rossknapman/Documents/PhD/* /Users/rossknapman/Seafile/My\ Library/PhDFolderBackup
+
+
+####################
+# Helical Shedding #
+####################
+
+
+cd /Users/rossknapman/Seafile/P-KE-96b_Skyrmions_in_helical_background_Ross_see_Dropbox/LabNotebook
+
+
+# Copy images to Seafile
+rsync -avz /Users/rossknapman/org/Helical_Shedding/* /Users/rossknapman/Seafile/P-KE-96b_Skyrmions_in_helical_background_Ross_see_Dropbox/LabNotebook/Images
+
+
+# Copy simulation files/videos
+rsync -avz /Users/rossknapman/Documents/PhD/Projects/Shedding/HelicalShedding/Simulations/* /Users/rossknapman/Seafile/P-KE-96b_Skyrmions_in_helical_background_Ross_see_Dropbox/LabNotebook/Simulations
+
+
+# Export org file to HTML
+
+emacs ~/org/research.org --batch --eval "(progn (org-id-goto \"c4dc3d5e-e1a5-46a7-89a3-7d90e91a7d02\") (org-html-export-to-html nil t))" --kill
+
+mv /Users/rossknapman/org/research.html /Users/rossknapman/Seafile/P-KE-96b_Skyrmions_in_helical_background_Ross_see_Dropbox/LabNotebook/LabNotebook.html
+
+
+# Substitutions to relative links in Seafile
+
+# Image relative links
+sed -i "" "s#Helical_Shedding/#Images/#g" LabNotebook.html
+
+# Simulations files relative links
+sed -i "" "s#file:///Users/rossknapman/Documents/PhD/Projects/Shedding/HelicalShedding/Simulations#Simulations/#g" LabNotebook.html
+
+
+############
+# Shedding #
+############
+
+rsync -avz --exclude "HelicalShedding/" /Users/rossknapman/Documents/PhD/Projects/Shedding/* /Users/rossknapman/Seafile/P-KE-96_3dSkyrmion_shedding_Ross
