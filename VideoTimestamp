@@ -1,0 +1,64 @@
+#!/bin/sh
+
+
+####################################
+# Batch burn timestamp onto videos #
+####################################
+
+
+# Note that ExifTool must be installed
+
+
+# Input and output directories
+input="/Users/rossknapman/Desktop/Spring2020"  # Directory containing input videos
+output="/Users/rossknapman/Desktop/Timestamped"  # Directory containing output videos
+tsUnix=1562788800  # If the timestamp changes part-way through the directory, the time at which it changed in Unix time
+
+# Important note: here we assume that the name order is the same as the date order (which is the case the way my phone names files)
+
+# Create the initial file from the first file
+cd $input
+
+cd $output
+
+videoNumber=0
+
+# For each file, timestamp the video and append it to the previous
+for filename in "$input"/*
+do
+	echo $filename
+
+	timestampSec=$(date -r $filename +%s)  # Get timestamp as local computer time
+
+	# Account for a change in time zone
+	if [[ "$timestampSec" -lt $tsUnix ]]
+	then
+		timeZone=0
+	else
+		timeZone=1  # Rememder to change this for different time zones!
+	fi
+
+    # Calculate new timestamp in seconds (bc is a calculator tool)
+	timestampSec=$(bc <<< "$timestampSec + $timeZone*3600")  # Edit timestamp for local time zone
+
+	width=$(exiftool -s3 -ImageWidth $filename)
+	height=$(exiftool -s3 -ImageHeight $filename)
+	rotation=$(exiftool -s3 -Rotation $filename)
+
+	# Rotate video if it was recorded vertically
+	if [[ "$rotation" = 90 ]]
+	then
+		temp=$width
+		width=$height
+		height=$temp
+	fi
+
+    # Use ffmpeg to write the timestamp onto the video
+	ffmpeg -y -loglevel panic -i $filename -vf [in]drawtext="fontsize=15:fontfile=/Library/Fonts/DroidSansMono.ttf:\
+text='%{pts\:gmtime\:$timestampSec}':fontsize=36:fontcolor='white':\
+boxcolor=0x000000AA:box=1:x=$width-text_w:y=$height-text_h" $output/$videoNumber.mp4
+
+    videoNumber=$((videoNumber+1))
+
+done
+

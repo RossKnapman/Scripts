@@ -1,12 +1,15 @@
 #!/bin/sh
 
+echo $SHELL
 
 ######################
 # Non-Research Stuff #
 ######################
 
-# Presentations
 rsync -avz /Users/rossknapman/Documents/PhD/* /Users/rossknapman/Seafile/My\ Library/PhDFolderBackup
+
+# Micromagnetic analysis tools
+cd /Users/rossknapman/Seafile/TWIST\ ST\ Administrative/Software/Data\ Analysis/MicromagneticAnalysisTools && git pull
 
 
 ####################
@@ -27,7 +30,7 @@ rsync -avz /Users/rossknapman/Documents/PhD/Projects/Shedding/HelicalShedding/Si
 
 # Export org file to HTML
 
-emacs ~/org/research.org --batch --eval "(progn (org-id-goto \"c4dc3d5e-e1a5-46a7-89a3-7d90e91a7d02\") (org-html-export-to-html nil t))" --kill
+emacs /Users/rossknapman/org/research.org --batch --eval "(progn (org-id-goto \"c4dc3d5e-e1a5-46a7-89a3-7d90e91a7d02\") (org-html-export-to-html nil t))" --kill
 
 mv /Users/rossknapman/org/research.html /Users/rossknapman/Seafile/P-KE-96b_Skyrmions_in_helical_background_Ross_see_Dropbox/LabNotebook/LabNotebook.html
 
