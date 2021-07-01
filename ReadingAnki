@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+
+
+########################################
+# Org Mode Reading to Anki Import File #
+########################################
+
+
+# In my reading.org file, I have papers in the tree structure:
+#
+# * CitationKey Title
+# ** Summary
+#     Summary of the paper
+#
+# and so on. I want to remember which citation key goes with which work, by using Anki. Therefore, this script exports a CSV file of the form
+#
+# CitationKey,Summary of the paper
+#
+# which can be imported to Anki.
+
+
+import re
+import sys
+
+
+reading_file = sys.argv[1]
+
+# Some entries do not yet have a citation key, and I don't want to include them, so I make sure that the entries match the form of the citation keys, which are of the form e.g. Knapman2021
+regexp = re.compile(r'[A-z][0-9][0-9][0-9][0-9]')
+
+
+with open('Output.txt', 'w') as out:
+    with open(reading_file, 'r') as f:
+
+        line = next(f)
+
+        while True:
+
+            if line.startswith('* ') and regexp.search(line.split(' ')[1]):
+
+                citation_key = line.split(' ')[1]
+                line = next(f)
+
+                while not line.startswith('* '):
+                    if line.startswith('** Summary'):
+                        out.write(citation_key + ',' + next(f))
+
+                    line = next(f)
+
+            else:
+                line = next(f)
