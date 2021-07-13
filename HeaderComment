@@ -5,7 +5,7 @@
 ###################################
 
 # First argument is the comment itself (I refer to it as "header" in this script), second is the charracter
-# Note: Need to escape if the replaceCharacter is '#' (e.g. like HeaderComment "This Is My Header" \#
+# Note: Need to escape if the replaceCharacter is '#' (e.g. like HeaderComment "This Is My Header" \#)
 
 theHeader=$1
 replaceCharacter=$2
