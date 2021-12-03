@@ -32,4 +32,8 @@ for i in $(seq $replaceCharacterLength); do
     commentLine=$commentLine$replaceCharacter
 done
 
-printf "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | pbcopy
+# For macOS
+#printf "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | pbcopy
+
+# For GNU/Linux
+printf "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | xclip -sel clip
