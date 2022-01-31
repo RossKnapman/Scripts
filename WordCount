@@ -4,4 +4,4 @@
 # Simple Word/Character/Line Count Tool #
 #########################################
 
-echo $1 | wc -mlw | awk '{ print "\nWords: " $2 "\tCharacters: " $3 "\tLines: " $1 }'
+echo $1 | wc -mlw | awk '{ print "\nWords: " $2 "\tCharacters: " $3 "\tLines: " $1 "\n" }'
