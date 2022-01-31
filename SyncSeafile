@@ -11,6 +11,11 @@ rsync -avz /Users/rossknapman/Documents/PhD/* /Users/rossknapman/Seafile/My\ Lib
 # Micromagnetic analysis tools
 cd /Users/rossknapman/Seafile/TWIST\ ST\ Administrative/BOTH/Software/Data\ Analysis/MicromagneticAnalysisTools && git pull
 
+# Presentations
+rsync --delete -avz /Users/rossknapman/Documents/PhD/Presentations /Users/rossknapman/Seafile/P-KE-96_3dSkyrmion_shedding_Ross 
+
+rsync --delete -avz /Users/rossknapman/Documents/PhD/Presentations /Users/rossknapman/Seafile/TWIST\ ST\ Talks\ and\ Posters/Talks\ by\ TWIST\ members/Talks\ by\ Ross\ Knapman
+
 
 ############
 # Shedding #
