@@ -8,3 +8,4 @@ extension=$(echo $1 | sed 's/.*\.//g')
 
 ffmpeg -y -i $1 -vf "pad=1.2*iw:1.5*ih:(ow-iw)/2:(oh-ih)/2:color=white" Padded.$extension
 ffmpeg -y -i Padded.$extension -vf "drawtext=text='$2':x=(w-text_w)/2:y=0.071*h:fontsize=48:fontcolor=black" $3
+rm Padded.$extension
