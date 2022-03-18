@@ -33,7 +33,7 @@ for i in $(seq $replaceCharacterLength); do
 done
 
 # For macOS
-#printf "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | pbcopy
+echo -e "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | pbcopy
 
-# For GNU/Linux
-printf "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | xclip -sel clip
+## For GNU/Linux
+#printf "$aboveBelowLine\n$commentLine\n$aboveBelowLine" | xclip -sel clip

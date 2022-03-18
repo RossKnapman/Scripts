@@ -43,6 +43,7 @@ with open('Output.txt', 'w') as out:
 
                 while not line.startswith('* '):
                     if line.startswith('** Summary'):
+                        print("Writing line")
                         out.write(citation_key + ';' + next(f))
 
                     line = next(f)
