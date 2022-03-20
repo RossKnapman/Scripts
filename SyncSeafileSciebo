@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Backup PhD Folder
+rsync -avz /Users/rossknapman/Documents/PhD/* /Users/rossknapman/Seafile/My\ Library/PhDFolderBackup
+
+# Micromagnetic Analysis Tools
+cd /Users/rossknapman/sciebo/MicromagneticAnalysisTools && git pull
+
+# Presentations
+rsync --delete --delete-excluded --exclude "*DS_Store" -avz /Users/rossknapman/Documents/PhD/Presentations /Users/rossknapman/Seafile/TWIST\ ST\ Talks\ and\ Posters/Talks\ by\ TWIST\ members/Talks\ by\ Ross\ Knapman
+rsync --delete --delete-excluded --exclude "*DS_Store" -avz /Users/rossknapman/Documents/PhD/Conferences /Users/rossknapman/sciebo/P-KE-96_3dSkyrmion_shedding_Ross 
+
+# Projects
+rsync -avz --delete-excluded --exclude "*DS_Store" --delete --exclude "HelicalShedding/" /Users/rossknapman/Documents/PhD/Projects/Shedding/* /Users/rossknapman/sciebo/P-KE-96_3dSkyrmion_shedding_Ross
+rsync -avz --delete-excluded --exclude "*DS_Store" --delete /Users/rossknapman/Documents/PhD/Projects/TimeHopfion /Users/rossknapman/sciebo/P-KE-96_3dSkyrmion_shedding_Ross 
+rsync -avz --delete-excluded --exclude "*DS_Store" --delete /Users/rossknapman/Documents/PhD/Projects/RiccardoHertelProject /Users/rossknapman/sciebo/P-KE-96_3dSkyrmion_shedding_Ross 
+
+# Thesis
+rsync -avz --delete-excluded --exclude "*DS_Store" --delete /Users/rossknapman/Documents/PhD/Thesis /Users/rossknapman/sciebo/P-KE-96_3dSkyrmion_shedding_Ross
+
+# Figures
+rsync -avz --delete-excluded --exclude "*DS_Store" --delete /Users/rossknapman/Documents/PhD/Figures /Users/rossknapman/sciebo/P-KE-96_3dSkyrmion_shedding_Ross 
