@@ -2,7 +2,7 @@
 
 
 ####################################
-# Batch burn timestamp onto videos #
+# Batch Burn Timestamp Onto Videos #
 ####################################
 
 
@@ -10,15 +10,13 @@
 
 
 # Input and output directories
-input="/Users/rossknapman/Desktop/Spring2020"  # Directory containing input videos
+input="/Users/rossknapman/Desktop/Vids"  # Directory containing input videos
 output="/Users/rossknapman/Desktop/Timestamped"  # Directory containing output videos
 tsUnix=1562788800  # If the timestamp changes part-way through the directory, the time at which it changed in Unix time
 
 # Important note: here we assume that the name order is the same as the date order (which is the case the way my phone names files)
 
 # Create the initial file from the first file
-cd $input
-
 cd $output
 
 videoNumber=0
@@ -35,7 +33,7 @@ do
 	then
 		timeZone=0
 	else
-		timeZone=1  # Rememder to change this for different time zones!
+		timeZone=2  # Remember to change this for different time zones!
 	fi
 
     # Calculate new timestamp in seconds (bc is a calculator tool)
@@ -55,7 +53,7 @@ do
 
     # Use ffmpeg to write the timestamp onto the video
 	ffmpeg -y -loglevel panic -i $filename -vf [in]drawtext="fontsize=15:fontfile=/Library/Fonts/DroidSansMono.ttf:\
-text='%{pts\:gmtime\:$timestampSec}':fontsize=36:fontcolor='white':\
+text='%{pts\:gmtime\:$timestampSec\:%d/%m/%y}':fontsize=36:fontcolor='white':\
 boxcolor=0x000000AA:box=1:x=$width-text_w:y=$height-text_h" $output/$videoNumber.mp4
 
     videoNumber=$((videoNumber+1))
