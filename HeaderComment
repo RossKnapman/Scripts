@@ -4,7 +4,7 @@
 # Create block comments like this #
 ###################################
 
-# First argument is the comment itself (I refer to it as "header" in this script), second is the charracter
+# First argument is the comment itself (I refer to it as "header" in this script), second is the character
 # Note: Need to escape if the replaceCharacter is '#' (e.g. like HeaderComment "This Is My Header" \#)
 
 theHeader=$1

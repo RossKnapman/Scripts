@@ -7,7 +7,7 @@ rsync -avz /Users/rossknapman/Documents/PhD/* /Users/rossknapman/Seafile/My\ Lib
 cd /Users/rossknapman/sciebo/MicromagneticAnalysisTools && git pull
 
 # Presentations
-rsync --delete --delete-excluded --exclude "*DS_Store" -avz /Users/rossknapman/Documents/PhD/Presentations /Users/rossknapman/Seafile/TWIST\ ST\ Talks\ and\ Posters/Talks\ by\ TWIST\ members/Talks\ by\ Ross\ Knapman
+rsync --delete --delete-excluded --exclude "*DS_Store" -avz /Users/rossknapman/Documents/PhD/Presentations /Users/rossknapman/sciebo/TalksByRossKnapman
 rsync --delete --delete-excluded --exclude "*DS_Store" -avz /Users/rossknapman/Documents/PhD/Conferences /Users/rossknapman/sciebo/P-KE-96_3dSkyrmion_shedding_Ross 
 
 # Projects
