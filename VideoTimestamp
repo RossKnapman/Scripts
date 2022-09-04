@@ -1,43 +1,63 @@
 #!/bin/bash
 
-
 ####################################
 # Batch Burn Timestamp Onto Videos #
 ####################################
 
+#---------------------------------------------------------------------------------------------------------
+# Note that ExifTool (and FFmpeg) must be installed
 
-# Note that ExifTool must be installed
+# A text file containing the directories and time zones must be supplied.
+# The first row should contain the Unix time of the timezone, up to which the first timezone should apply.
+# Subsequent rows should contain Unix times up to which the subsequent time zones should apply, then the
+# last row should contain just the time zone for times higher than those already specified. There should
+# not be any blank lines at the bottom of the file.
 
+# For example, if all files should be timestamped with CEST (UTC +2) up to 06:00 UTC on 16th June 2022
+# (Unix timestamp 1655359200), then to PDT (UTC -7) up to up to 12:00 on 31st August 2022 (Unix timestamp
+# 1661947200), then subsequently CEST again, and the folder contain the videos to be processed is
+# ~/Desktop/Videos, and the folder to contains the processed videos is ~/Desktop/Processed, then the
+# file should have the structure:
 
-# Input and output directories
-input="/Users/rossknapman/Desktop/ToTimestamp"  # Directory containing input videos
-output="/Users/rossknapman/Desktop/Timestamped"  # Directory containing output videos
-tsUnix=1655424000  # If the timestamp changes part-way through the directory, the time at which it changed in Unix time
+# ~/Desktop/Videos
+# ~/Desktop/Processed
+# 1655359200,2
+# 1661947200,-7
+# 2
+#---------------------------------------------------------------------------------------------------------
 
-# Important note: here we assume that the name order is the same as the date order (which is the case the way my phone names files)
+# The script is then run as: VideoTimestamp "file_containing_timezones.txt"
 
-# Create the initial file from the first file
-cd $output
+timezonesFile=$1
+
+# Ensure timezones file supplied (otherwise tell the user and exit)
+[ -z "$timezonesFile" ] && echo "Please supply a time zones files" && exit 1
+
+inputDirectory=$(sed '1q;d' $timezonesFile)
+outputDirectory=$(sed '2q;d' $timezonesFile)
+
+noLines=$(cat $timezonesFile | wc -l)
 
 videoNumber=0
 
 # For each file, timestamp the video and append it to the previous
-for filename in "$input"/*
+for filename in "$inputDirectory"/*
 do
-	echo $filename
+	videoTimestamp=$(date -r $filename +%s)  # Get timestamp as local computer time
 
-	timestampSec=$(date -r $filename +%s)  # Get timestamp as local computer time
+	# Loop through timezones file until we find the one corresponding to the time of our video (skipping the two input/ouput directory lines)
+	for (( i=3; i<=$noLines; i++ ))
+	do
+		line=$(sed "${i}q;d" $timezonesFile)
+		IFS=, read timestamp offset <<< "$line"
+		[[ $videoTimestamp -lt $timestamp ]] && timezone=$offset && break || unset timezone
+	done
 
-	# Account for a change in time zone
-	if [[ "$timestampSec" -lt $tsUnix ]]
-	then
-		timeZone=2
-	else
-		timeZone=-7  # Remember to change this for different time zones!
-	fi
+	# If we didn't set the offset, we reached the end of the file, so we take the final line as the offset
+	[[ -z $timezone ]] && timezone=$(tail -n1 $timezonesFile)
 
-    # Calculate new timestamp in seconds (bc is a calculator tool)
-	timestampSec=$(bc <<< "$timestampSec + $timeZone*3600")  # Edit timestamp for local time zone
+    # Calculate new timestamp in seconds
+	videoTimestamp=$(bc <<< "$videoTimestamp + $timezone*3600")  # Edit timestamp for local time zone
 
 	width=$(exiftool -s3 -ImageWidth $filename)
 	height=$(exiftool -s3 -ImageHeight $filename)
@@ -47,16 +67,17 @@ do
 	if [[ "$rotation" = 90 ]]
 	then
 		temp=$width
-	.mp4	width=$height
+		width=$height
 		height=$temp
 	fi
 
     # Use ffmpeg to write the timestamp onto the video
-	ffmpeg -y -loglevel panic -i $filename -vf [in]drawtext="fontsize=15:fontfile=/Library/Fonts/DroidSansMono.ttf:\
-text='%{pts\:gmtime\:$timestampSec\:%F\ %R}':fontsize=36:fontcolor='white':\
-boxcolor=0x000000AA:box=1:x=$width-text_w:y=$height-text_h" $output/$videoNumber.mp4
+	# The -vsync vfr prevents Quicktime/other editors creating a slow-motion part of the video
+	ffmpeg -y -loglevel panic -i $filename \
+		-vf [in]drawtext="fontsize=15:fontfile=/Library/Fonts/DroidSansMono.ttf:\
+		text='%{pts\:gmtime\:$videoTimestamp\:%a\ %d\.%m\.%y\ %R}':fontsize=36:fontcolor='white':\
+		boxcolor=0x000000AA:box=1:x=$width-text_w:y=$height-text_h" -vsync vfr $outputDirectory/$videoNumber.mp4
 
     videoNumber=$((videoNumber+1))
 
 done
-
