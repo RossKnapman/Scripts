@@ -64,7 +64,7 @@ do
 	rotation=$(exiftool -s3 -Rotation $filename)
 
 	# Rotate video if it was recorded vertically
-	if [[ "$rotation" = 90 ]]
+	if [[ "$rotation" = 90 ]] || [ "$rotation" = 270 ]
 	then
 		temp=$width
 		width=$height
